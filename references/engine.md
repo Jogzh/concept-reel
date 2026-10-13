@@ -8,6 +8,8 @@ Concept Reel 在一张 1920×1080 Canvas 上绘制画面，用 `seek(t)` 指定�
 engine/
   vk.js        时间、Frame、背景、辉光、颗粒与seek
   vk-kit.js    字幕、片名、章节标记、仪表和小道具
+  vk-styles.js 风格背景、字幕与 15 类演示动作
+  styles.json  风格 ID、色板、动作与创作配方的单一数据源
   index.html   共享页面模板
   render.py    预览、截图、视频编码、事件表与确定性检查
   audio.py     事件声音合成、配乐与音画合成
@@ -15,6 +17,7 @@ engine/
   fonts/       开源字体与许可证
 scripts/
   new_film.py  创建工程与分镜模板
+  styles.py    风格查询与数据读取
   check_env.py 环境和资源诊断
 ```
 
@@ -41,6 +44,9 @@ python scripts/check_env.py --project projects/my_film
 
 ```bash
 python scripts/new_film.py projects/my_film --world C --title '排队' --duration 40 --fps 30
+python scripts/new_film.py --list-styles --json
+python scripts/new_film.py --describe-style sticker
+python scripts/new_film.py projects/sticker_film --style sticker --title '排队' --duration 40 --fps 30
 python engine/render.py projects/my_film --serve
 python engine/render.py projects/my_film --serve --port 0
 python engine/render.py projects/my_film --stills 2.5 8.5 21
@@ -57,7 +63,7 @@ python engine/audio.py projects/my_film --wav-only
 python engine/audio.py projects/my_film --bgm music.mp3 --bgm-db -8
 ```
 
-`new_film.py` 支持 B 寓言与 C 夜曲，默认 C、30秒、30fps，创建 `index.html`、`film.js` 和 `storyboard.md`。默认拒绝覆盖已有代码；`--force` 可以重建代码骨架，仍保留已有分镜。
+`new_film.py` 支持 15 种 `--style ID`，并保留 `--world B/C`；两者互斥，ID 不区分大小写。默认 C、30秒、30fps，创建 `index.html`、`film.js` 和 `storyboard.md`。`--list-styles` / `--describe-style ID` 是无需工程路径的只读查询，可加 `--json`。默认拒绝覆盖已有代码；`--force` 可以重建代码骨架，仍保留已有分镜。
 
 预览默认监听 `127.0.0.1:8765`，`--port 0` 选择空闲端口。URL 加 `?play` 实时播放，加 `?t=12.5` 查看固定时间。修改后刷新。`--browser` 控制截图和导出使用的浏览器；预览页面由自己打开的浏览器显示。
 
@@ -164,7 +170,33 @@ python engine/audio.py projects/my_film --bgm music.mp3 --bgm-db -8
 | `under(ctx,t)` | 底之上、内容之下，不参加内容层辉光 |
 | `post(ctx,t)` | 内容合成后的全幅效果 |
 
-辉光将内容层缩小、模糊后以加法合成。大面积实心形状可以降低 `bloom`，或画入 `under`，避免过曝。`gilt` 与年份栏保留为兼容组件，新工程生成器只提供 B/C 两套外观。
+辉光将内容层缩小、模糊后以加法合成。大面积实心形状可以降低 `bloom`，或画入 `under`，避免过曝。`gilt` 与年份栏保留为兼容组件；新风格在这些底层接口之上实现。
+
+## VStyles 风格层
+
+HTML 在 `vk.js`、`vk-kit.js` 后加载 `/engine/vk-styles.js`。生成器将选定的 JSON profile 内嵌为 `STYLE`，不需要异步加载；画廊通过 `VStyles.load()` 读取共享目录。
+
+| 接口 | 用途 |
+| --- | --- |
+| `await VStyles.load()` | 读取并校验 `/engine/styles.json`；请求或数据失败抛错 |
+| `VStyles.apply(fr,profile,t)` | 每帧先调用，设置 flat 底色、辉光、颗粒，并在 under 画风格背景 |
+| `VStyles.caption(fr,t,list,profile)` | 主体后调用，在 post 画稳定字幕；使用 `{词}` / `{!词}` 标记 |
+| `VStyles.demo(fr,profile,localTime)` | 中央舞台演示轮廓、投影、形变等特征；供学习和实验 |
+
+profile 包含 `id/name/en_name`、`palette`（`bg/ink/accent/secondary/muted`）、`font`（VK 字体键）、`look`（`bloom/grain`）、`motion`（`duration/easing/fps`）和 `signature/use_cases/recipe/avoid/implementation`。`motion.fps` 是阶梯动作采样建议，不改变输出 FPS；普通场景自行引用动作参数。
+
+```js
+// STYLE 由 new_film.py --style 写入，可按自己的内容调整。
+draw(fr, t) {
+  VStyles.apply(fr, STYLE, t);
+  scene1(fr, t);  // 自己的主体与机制
+  VStyles.caption(fr, t, SUBS, STYLE);
+}
+```
+
+风格字幕项支持 `a/b/zh` 和可选 `en/big/tone/size/font/y/enY`；默认中线 y=944、43px，长行自动缩小到最大 1640px，但仍需检查阅读。强调色与警示色在深色字幕底上保持对比，正文不随背景辉光发亮。`apply` / `caption` 会接续当前 under/post；自定义绘制也可在调用后显式安排合成顺序。
+
+风格不是自动主题生成器，`demo` 不应作为整片唯一场景。选型与实现边界见 [styles.md](styles.md)，完整样本见 [style_gallery](../examples/style_gallery/film.js)。
 
 ## VKit组件
 

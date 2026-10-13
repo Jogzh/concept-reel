@@ -17,6 +17,12 @@ Concept Reel 由 Jogzh 维护。新仓库使用独立的提交历史，保留上
 
 制作约定参考 Jogzh 的 `ai-video` 项目中的 `docs/video-style-guide.md`，环境诊断参考其 `scripts/check_env.sh` 的检查思路。只提取内容驱动构图、阅读停留、确定性动画、关键帧检查等通用工程方法，改写为自包含的 Canvas 工作流；没有复制私人素材，也不要求访问该本地项目。
 
+## 动态风格参考
+
+15 类风格名称与识别特征参考 [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15)，参考版本 `49052d80bfaf9fa8412cc9710530e5e95a3b8d8c`。该仓库声明代码、提示词、文档与原创影片采用 MIT，第三方照片、字体、采样、纹理等各自保留许可。
+
+本版本重新编写 `references/styles.md`、`engine/styles.json` 的内容用途与 Canvas 配方，自行实现 `engine/vk-styles.js` 和 `examples/style_gallery`。没有复制参考仓库的品牌、剧情、源码或素材，没有引入其字体、照片、音频、网格和视频。3D、玻璃、液态及综艺字幕按本项目实际 Canvas 与横屏能力适配，具体边界随配方记录。
+
 ## 字体与依赖
 
 字体下载源：[google/fonts](https://github.com/google/fonts/tree/main/ofl)，Noto Serif SC、Noto Sans SC、Cormorant Garamond、Lora、JetBrains Mono、Courier Prime。字体属于其各自作者，使用 SIL Open Font License 1.1，授权文本位于 `engine/fonts/OFL-*.txt`。下载脚本会同时检查字体和对应许可。字体不适用本项目的 MIT 许可。

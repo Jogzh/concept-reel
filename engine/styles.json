@@ -1,0 +1,647 @@
+[
+  {
+    "id": "cel-boil",
+    "name": "逐帧手绘",
+    "en_name": "Frame-by-Frame / Line Boil",
+    "palette": {
+      "bg": "#F6F0E4",
+      "ink": "#25282B",
+      "accent": "#ED694B",
+      "secondary": "#6B9E85",
+      "muted": "#A79984"
+    },
+    "font": "sans",
+    "look": {
+      "bloom": 0,
+      "grain": 0.035
+    },
+    "motion": {
+      "duration": 0.45,
+      "easing": "outBack",
+      "fps": 12
+    },
+    "signature": [
+      "固定低帧率的微小轮廓变化",
+      "不完全规整的手绘线",
+      "挤压拉伸与短暂预备动作"
+    ],
+    "use_cases": [
+      "观察实验",
+      "生活小机制",
+      "亲切的人物或物体演示"
+    ],
+    "recipe": [
+      "先画可识别的实体轮廓和少量填色",
+      "用 floor(t*12) 与固定种子采样线条扰动",
+      "把预备、挤压、恢复安排成独立时间段"
+    ],
+    "avoid": [
+      "用每帧随机数制造抖动",
+      "让正文文字持续晃动",
+      "把所有物体都画成同一圆形"
+    ],
+    "implementation": "Canvas 路径加固定节拍扰动；适合程序化轮廓，复杂角色需逐姿态绘制。"
+  },
+  {
+    "id": "isometric",
+    "name": "等距空间",
+    "en_name": "Isometric 2.5D",
+    "palette": {
+      "bg": "#EAF0E7",
+      "ink": "#253A3A",
+      "accent": "#ECA45B",
+      "secondary": "#5F9CA0",
+      "muted": "#89998E"
+    },
+    "font": "sans",
+    "look": {
+      "bloom": 0,
+      "grain": 0.015
+    },
+    "motion": {
+      "duration": 0.65,
+      "easing": "out3",
+      "fps": 30
+    },
+    "signature": [
+      "统一等距投影和三面明暗",
+      "组件从平面堆叠成系统",
+      "遮挡与前后层次清楚"
+    ],
+    "use_cases": [
+      "城市与供应链",
+      "系统组成",
+      "空间关系与资源分配"
+    ],
+    "recipe": [
+      "用同一投影函数把世界坐标映射到屏幕",
+      "按深度排序后绘制顶面与侧面",
+      "用升起、连接、拆解解释系统组成"
+    ],
+    "avoid": [
+      "每个对象使用不同投影角度",
+      "立体阴影遮住标签",
+      "为装饰堆叠无关建筑"
+    ],
+    "implementation": "Canvas 多边形等距投影；不是透视相机或真实三维光照。"
+  },
+  {
+    "id": "flat-vector",
+    "name": "扁平矢量",
+    "en_name": "Flat Vector",
+    "palette": {
+      "bg": "#F5EEDD",
+      "ink": "#202D32",
+      "accent": "#F16D52",
+      "secondary": "#47A6A0",
+      "muted": "#9FADAA"
+    },
+    "font": "sansh",
+    "look": {
+      "bloom": 0,
+      "grain": 0
+    },
+    "motion": {
+      "duration": 0.5,
+      "easing": "outBack",
+      "fps": 30
+    },
+    "signature": [
+      "饱和色块与清晰轮廓",
+      "圆角几何和有限配色",
+      "预备动作、弹性落点和停顿"
+    ],
+    "use_cases": [
+      "流程与概念入门",
+      "分类比较",
+      "行为机制与界面关系"
+    ],
+    "recipe": [
+      "用色块区分对象身份和作用",
+      "让对象先预备再移动到有含义的位置",
+      "落点后停止弹跳，留出阅读"
+    ],
+    "avoid": [
+      "把所有动作都做成弹跳",
+      "同时展示过多色彩",
+      "用几何形状替代无法认出的真实主体"
+    ],
+    "implementation": "直接使用 Canvas 基本形状和 VK 缓动；最轻量的通用起点。"
+  },
+  {
+    "id": "line-art",
+    "name": "极简线稿",
+    "en_name": "Line Art",
+    "palette": {
+      "bg": "#FAF8F0",
+      "ink": "#28383E",
+      "accent": "#A76F4B",
+      "secondary": "#6E9194",
+      "muted": "#A8B0AB"
+    },
+    "font": "serifm",
+    "look": {
+      "bloom": 0,
+      "grain": 0.018
+    },
+    "motion": {
+      "duration": 0.8,
+      "easing": "io3",
+      "fps": 30
+    },
+    "signature": [
+      "有限线宽与大片留白",
+      "路径逐段写出或擦除",
+      "线条连续性与终点清楚"
+    ],
+    "use_cases": [
+      "结构和路径",
+      "连接关系",
+      "几何与设计原理"
+    ],
+    "recipe": [
+      "先建立可辨认的轮廓路径",
+      "按真实路径长度计算描线进度",
+      "补上节点和靠近对象的少量标签"
+    ],
+    "avoid": [
+      "用极细线条堆成复杂纹理",
+      "每个元素都画入场描线",
+      "强调笔画过程却没有内容落点"
+    ],
+    "implementation": "fr.poly 的 k 或原生路径分段；曲线可预采样，避免累计绘制。"
+  },
+  {
+    "id": "3d-render",
+    "name": "柔塑立体",
+    "en_name": "3D Render · Canvas Adaptation",
+    "palette": {
+      "bg": "#E9E5FA",
+      "ink": "#303247",
+      "accent": "#EB916D",
+      "secondary": "#918AD6",
+      "muted": "#A5A1BB"
+    },
+    "font": "sans",
+    "look": {
+      "bloom": 0,
+      "grain": 0.012
+    },
+    "motion": {
+      "duration": 0.85,
+      "easing": "io3",
+      "fps": 30
+    },
+    "signature": [
+      "柔和材质与接触阴影",
+      "体积、遮挡和高光保持一致",
+      "相机感缓慢推进和重量落点"
+    ],
+    "use_cases": [
+      "空间直觉",
+      "产品结构示意",
+      "需要体积和重量的概念"
+    ],
+    "recipe": [
+      "用投影几何和渐变建立体积",
+      "把投影、地面接触阴影与主体位置绑定",
+      "缓慢移动后稳定显示剖面或标签"
+    ],
+    "avoid": [
+      "宣称 Canvas 示意为物理级渲染",
+      "仅用发光圆冒充真实物体",
+      "把复杂真实材质交给二维渐变"
+    ],
+    "implementation": "本库提供 Canvas 着色投影与阴影示意；真实网格、PBR、复杂相机需另接 Three.js/Blender 工程，不随预设自动提供。"
+  },
+  {
+    "id": "morph",
+    "name": "形状变形",
+    "en_name": "Shape Morph",
+    "palette": {
+      "bg": "#F2ECFF",
+      "ink": "#302343",
+      "accent": "#9464D8",
+      "secondary": "#F18D72",
+      "muted": "#A599B9"
+    },
+    "font": "sansh",
+    "look": {
+      "bloom": 0,
+      "grain": 0.005
+    },
+    "motion": {
+      "duration": 0.9,
+      "easing": "io3",
+      "fps": 30
+    },
+    "signature": [
+      "同一个轮廓连续变成下一形状",
+      "对应点数量与顺序固定",
+      "变形终点完整停留"
+    ],
+    "use_cases": [
+      "概念转化",
+      "分类的共同结构",
+      "状态与身份变化"
+    ],
+    "recipe": [
+      "把起止形状采样为相同数量的有序点",
+      "按语义对应点插值轮廓",
+      "在两个端点分别停住以确认对象身份"
+    ],
+    "avoid": [
+      "对不对应的点盲目插值",
+      "用无关变形串代替解释",
+      "中间态像液滴时混淆形状变形与流体"
+    ],
+    "implementation": "Canvas 多边形点对应插值；复杂路径先重采样，不依赖 DOM 动画。"
+  },
+  {
+    "id": "sticker",
+    "name": "贴纸科普",
+    "en_name": "Sticker Explainer",
+    "palette": {
+      "bg": "#FFF4C8",
+      "ink": "#263633",
+      "accent": "#EB6652",
+      "secondary": "#57A99A",
+      "muted": "#A49B76"
+    },
+    "font": "sansh",
+    "look": {
+      "bloom": 0,
+      "grain": 0.025
+    },
+    "motion": {
+      "duration": 0.45,
+      "easing": "outBack",
+      "fps": 30
+    },
+    "signature": [
+      "白色描边贴纸与轻阴影",
+      "箭头、编号和短标签",
+      "图文卡片拆装与重点放大"
+    ],
+    "use_cases": [
+      "知识拆解",
+      "组成成分",
+      "日常物品中的抽象机制"
+    ],
+    "recipe": [
+      "先画足够形态线索的主体并加贴纸描边",
+      "标签和箭头指向真实部件",
+      "用拆开、分类、放大解释局部"
+    ],
+    "avoid": [
+      "堆满贴纸挡住主体",
+      "标签只装饰不指向对象",
+      "把参考片品牌或剧情当作通用模板"
+    ],
+    "implementation": "Canvas 描边形状、卡片与箭头；可加载有使用权的本地抠图，但预设无需图片素材。"
+  },
+  {
+    "id": "hud",
+    "name": "信息仪表",
+    "en_name": "Cyberpunk HUD / FUI",
+    "palette": {
+      "bg": "#081B24",
+      "ink": "#E1FAF5",
+      "accent": "#5CE0CF",
+      "secondary": "#E8A755",
+      "muted": "#537983"
+    },
+    "font": "mono",
+    "look": {
+      "bloom": 0.18,
+      "grain": 0.02
+    },
+    "motion": {
+      "duration": 0.6,
+      "easing": "out3",
+      "fps": 30
+    },
+    "signature": [
+      "细网格、刻度、对齐标线",
+      "锁定与扫描具有明确目标",
+      "等宽数据与有限强调色"
+    ],
+    "use_cases": [
+      "实时模型示意",
+      "测量与系统诊断",
+      "网络和控制机制"
+    ],
+    "recipe": [
+      "先明确每个读数代表什么与数据来源",
+      "在主体附近建立定位框、刻度和单位",
+      "扫描后只显示有解释价值的测量结果"
+    ],
+    "avoid": [
+      "用随机读数伪装数据",
+      "无法读完的密集技术文字",
+      "无目标闪烁或持续故障特效"
+    ],
+    "implementation": "Canvas 网格、弧线、定位框与计算读数；扫描位置由 t 直接计算。"
+  },
+  {
+    "id": "collage",
+    "name": "拼贴剪纸",
+    "en_name": "Collage / Cut-out",
+    "palette": {
+      "bg": "#E7DDC7",
+      "ink": "#342B27",
+      "accent": "#C9533E",
+      "secondary": "#608A84",
+      "muted": "#A5977E"
+    },
+    "font": "serif",
+    "look": {
+      "bloom": 0,
+      "grain": 0.045
+    },
+    "motion": {
+      "duration": 0.5,
+      "easing": "out3",
+      "fps": 12
+    },
+    "signature": [
+      "纸片边缘、重叠和轻投影",
+      "印刷感字体与不对称排版",
+      "分层剪贴和阶梯动作"
+    ],
+    "use_cases": [
+      "历史与文化",
+      "证据对照",
+      "多来源观点和叙事"
+    ],
+    "recipe": [
+      "分清底纸、主体纸片、标注三层",
+      "固定种子生成少量纸边不规则",
+      "用揭开、替换、拼合组织证据"
+    ],
+    "avoid": [
+      "未记录照片与引用来源",
+      "随机纹理压住文字",
+      "仅旋转矩形却缺少拼贴层次"
+    ],
+    "implementation": "程序化纸片和边缘；真实照片与扫描材料需另存来源，画廊不使用第三方照片。"
+  },
+  {
+    "id": "aurora-glass",
+    "name": "极光玻璃",
+    "en_name": "Aurora & Glassmorphism",
+    "palette": {
+      "bg": "#11162D",
+      "ink": "#EFF5FF",
+      "accent": "#92AFE8",
+      "secondary": "#A2D9CA",
+      "muted": "#637494"
+    },
+    "font": "sansm",
+    "look": {
+      "bloom": 0.08,
+      "grain": 0.01
+    },
+    "motion": {
+      "duration": 1.2,
+      "easing": "io3",
+      "fps": 30
+    },
+    "signature": [
+      "大尺度柔和渐变光团",
+      "半透明面板与细亮边",
+      "克制缓慢的层次移动"
+    ],
+    "use_cases": [
+      "抽象关系",
+      "未来感界面",
+      "信息分组与层级"
+    ],
+    "recipe": [
+      "把低频柔光放在主体后方",
+      "玻璃面板保持可读底色和边界",
+      "用轻微位移解释前后层级"
+    ],
+    "avoid": [
+      "发光面板吞掉文字对比度",
+      "把每个对象都模糊",
+      "以背景流动代替概念动作"
+    ],
+    "implementation": "Canvas 渐变、半透明面板与边缘高光；不自动提供真实背景折射或 CSS backdrop-filter。"
+  },
+  {
+    "id": "bauhaus",
+    "name": "包豪斯几何",
+    "en_name": "Geometric Bauhaus",
+    "palette": {
+      "bg": "#F1E8D1",
+      "ink": "#242523",
+      "accent": "#D95338",
+      "secondary": "#D8AD37",
+      "muted": "#8D8F80"
+    },
+    "font": "sansh",
+    "look": {
+      "bloom": 0,
+      "grain": 0.022
+    },
+    "motion": {
+      "duration": 0.45,
+      "easing": "out3",
+      "fps": 30
+    },
+    "signature": [
+      "原色、黑色与米白构成",
+      "圆、方、三角形成比例与秩序",
+      "网格对齐和有节奏的硬朗位移"
+    ],
+    "use_cases": [
+      "比例与规律",
+      "数学结构",
+      "分类、秩序和对比"
+    ],
+    "recipe": [
+      "先设定网格与几何比例",
+      "颜色只对应少量稳定含义",
+      "把移动、切割、旋转对齐到有意义的节拍"
+    ],
+    "avoid": [
+      "为追求节拍打断阅读",
+      "把抽象几何用于不可辨认的实物",
+      "混用过多柔光和圆角面板"
+    ],
+    "implementation": "Canvas 几何、裁剪和固定时间表；几何秩序须承担叙事含义。"
+  },
+  {
+    "id": "synthwave",
+    "name": "霓虹复古",
+    "en_name": "80s Synthwave / VHS",
+    "palette": {
+      "bg": "#120F2A",
+      "ink": "#FFEAF7",
+      "accent": "#F66BC4",
+      "secondary": "#77CFEA",
+      "muted": "#77567D"
+    },
+    "font": "sansh",
+    "look": {
+      "bloom": 0.15,
+      "grain": 0.03
+    },
+    "motion": {
+      "duration": 0.8,
+      "easing": "out3",
+      "fps": 30
+    },
+    "signature": [
+      "透视网格、地平线和霓虹",
+      "紫红青对比与复古层次",
+      "克制扫描线和固定种子信号偏移"
+    ],
+    "use_cases": [
+      "技术史与时代感",
+      "时间推进",
+      "数字系统与空间隐喻"
+    ],
+    "recipe": [
+      "用统一消失点建立透视网格",
+      "让地平线和主体相互定位",
+      "扫描线低于文字对比度，结论段减少干扰"
+    ],
+    "avoid": [
+      "让 VHS 故障影响字幕阅读",
+      "自动导入受版权保护的时代音乐",
+      "仅靠粉紫配色宣称完成风格"
+    ],
+    "implementation": "Canvas 透视网格、渐变与确定性扫描线；不自动加载音轨或复制品牌。"
+  },
+  {
+    "id": "pixel",
+    "name": "像素叙事",
+    "en_name": "Pixel Art",
+    "palette": {
+      "bg": "#17283D",
+      "ink": "#E3E6CE",
+      "accent": "#F3C75A",
+      "secondary": "#69B7A2",
+      "muted": "#75899A"
+    },
+    "font": "mono",
+    "look": {
+      "bloom": 0,
+      "grain": 0
+    },
+    "motion": {
+      "duration": 0.5,
+      "easing": "lin",
+      "fps": 12
+    },
+    "signature": [
+      "整数像素网格和有限色板",
+      "像素角色轮廓与分帧姿态",
+      "阶梯位移与清晰的状态反馈"
+    ],
+    "use_cases": [
+      "算法与离散过程",
+      "状态机",
+      "游戏化机制演示"
+    ],
+    "recipe": [
+      "先在低分辨率整数网格绘制主体",
+      "放大时关闭平滑并锁定像素倍数",
+      "动画以离散姿态和状态变化解释过程"
+    ],
+    "avoid": [
+      "缩放后出现半像素模糊",
+      "中文正文使用过小像素字",
+      "以游戏装饰代替状态含义"
+    ],
+    "implementation": "Canvas 整数网格与手写像素图案；中文正文仍用共享可读字体，无新增像素字体。"
+  },
+  {
+    "id": "liquid",
+    "name": "液态流动",
+    "en_name": "Liquid Motion",
+    "palette": {
+      "bg": "#DCEFE8",
+      "ink": "#214B4D",
+      "accent": "#36A99B",
+      "secondary": "#91C8B5",
+      "muted": "#7BA5A0"
+    },
+    "font": "sans",
+    "look": {
+      "bloom": 0,
+      "grain": 0.008
+    },
+    "motion": {
+      "duration": 0.9,
+      "easing": "io3",
+      "fps": 30
+    },
+    "signature": [
+      "可见的连接、颈部与分离",
+      "流动边界与黏性延迟",
+      "合并、分裂、滴落和波纹"
+    ],
+    "use_cases": [
+      "扩散与流动示意",
+      "连接与聚合",
+      "连续系统的直觉"
+    ],
+    "recipe": [
+      "先定义滴体的中心、半径与连接关系",
+      "用当前 t 计算边界和细颈的出现分离",
+      "在最终滴体或结构形成后停住并标注"
+    ],
+    "avoid": [
+      "把变形圆当作物理仿真结论",
+      "逐帧积累粒子速度造成 seek 失效",
+      "用流体效果解释离散事实而不标示意"
+    ],
+    "implementation": "Canvas 程序化液滴和曲线连接示意；不是 Navier–Stokes 或物理求解器。"
+  },
+  {
+    "id": "variety",
+    "name": "综艺花字",
+    "en_name": "Variety Captions",
+    "palette": {
+      "bg": "#F8ECDB",
+      "ink": "#352D45",
+      "accent": "#E16983",
+      "secondary": "#77B8AB",
+      "muted": "#AD9EAA"
+    },
+    "font": "sansh",
+    "look": {
+      "bloom": 0,
+      "grain": 0.02
+    },
+    "motion": {
+      "duration": 0.4,
+      "easing": "outBack",
+      "fps": 30
+    },
+    "signature": [
+      "重点词分层花字与轮廓阴影",
+      "反应标签、气泡与短促节拍",
+      "表情符号式形态辅助情境"
+    ],
+    "use_cases": [
+      "生活观察",
+      "轻松行为科普",
+      "情境反应与转折"
+    ],
+    "recipe": [
+      "正文和花字分工：正文稳定，花字只突出短关键词",
+      "花字靠近触发它的对象或动作",
+      "反应后停住，避免连续弹跳与遮挡"
+    ],
+    "avoid": [
+      "所有字幕都做成花字",
+      "夸张标签误导事实判断",
+      "默认承诺参考片的竖屏画幅"
+    ],
+    "implementation": "当前适配 1920×1080 横屏；Canvas 描边花字和反应气泡，竖屏需另做画布与布局支持。"
+  }
+]

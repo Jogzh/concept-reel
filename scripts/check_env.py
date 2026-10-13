@@ -111,7 +111,7 @@ def collect_checks(browser="chromium", project=None):
             checks.append(result(f"dependency:{distribution}", False, str(error).splitlines()[0][:300], "Run python -m pip install -r requirements.txt in your virtual environment."))
     checks.extend(command_check(name) for name in ("ffmpeg", "ffprobe"))
     checks.append(browser_check(browser))
-    resources = ("engine/index.html", "engine/vk.js", "engine/vk-kit.js", "engine/render.py", "engine/audio.py", "engine/get_fonts.py")
+    resources = ("engine/index.html", "engine/vk.js", "engine/vk-kit.js", "engine/vk-styles.js", "engine/styles.json", "engine/render.py", "engine/audio.py", "engine/get_fonts.py")
     missing = [path for path in resources if not (ROOT / path).is_file()]
     checks.append(result("engine", not missing, "missing: " + ", ".join(missing) if missing else "all engine resources present"))
     sys.path.insert(0, str(ROOT))

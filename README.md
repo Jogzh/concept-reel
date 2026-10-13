@@ -8,6 +8,8 @@ Concept Reel 使用 JavaScript Canvas 描绘画面，Playwright 按时间捕获�
 
 ## 这个版本做了什么
 
+- 参考 [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15)，新增 15 种动态设计风格、机器可读配方、AI 选型方法与可运行风格画廊。
+- 风格独立于旧 B/C 外观，支持 `--style`、`--list-styles`、`--describe-style`；旧工程保持兼容。
 - 统一项目与 skill 名称为 `concept-reel`，重写安装、创作与贡献说明。
 - 默认使用 Playwright 自带 Chromium，可选择本机 Chrome。
 - 补全示例入口，检查参数、字体和环境；页面错误与编码失败返回明确错误。
@@ -57,16 +59,38 @@ python engine/render.py examples/fold_C --clip 0 3 preview
 
 skill 包含选题、事实表、分镜、代码、视觉检查和音频流程。仅需预览时可以停在预览与源码交付；请求成片时才导出完整视频。
 
+也可以让 Agent 自主探索：“先比较 2–3 种适合这个主题的风格，选一个主风格，可加一种辅风格；说明画面怎样帮助理解，再制作关键镜头。”构图、动作配方与实现范围见 [15 种风格与选型](references/styles.md)。
+
 如果使用支持 `~/.codex/skills/` 的 Agent，可在该目录链接此仓库，并使用 `concept-reel` 作为目录名。也可以直接指定 `SKILL.md` 的绝对路径，无需安装。
 
 ## 自己写画面
 
 ```bash
-python scripts/new_film.py projects/probability --world C \
+python scripts/new_film.py --list-styles
+python scripts/new_film.py --describe-style isometric
+python scripts/new_film.py projects/probability --style isometric \
   --title "概率与直觉" --duration 60 --fps 30
 ```
 
-命令生成 `index.html`、`film.js` 和 `storyboard.md`，保留已有分镜。骨架能运行，画面需按分镜编写。两种起始外观：
+命令生成 `index.html`、`film.js` 和 `storyboard.md`，保留已有分镜。风格配方写进源码，方便 AI 调整色板、节奏与主体；骨架能运行，主题画面需按分镜编写。
+
+| 风格 ID | 视觉语言 | 风格 ID | 视觉语言 | 风格 ID | 视觉语言 |
+| --- | --- | --- | --- | --- | --- |
+| `cel-boil` | 逐帧手绘 | `isometric` | 等距 2.5D | `flat-vector` | 扁平矢量 |
+| `line-art` | 极简线稿 | `3d-render` | 柔塑立体适配 | `morph` | 形状变形 |
+| `sticker` | 贴纸科普 | `hud` | 信息仪表 | `collage` | 拼贴剪纸 |
+| `aurora-glass` | 极光玻璃 | `bauhaus` | 包豪斯几何 | `synthwave` | 霓虹复古 |
+| `pixel` | 像素叙事 | `liquid` | 液态流动 | `variety` | 综艺花字 |
+
+`--list-styles --json` 输出完整参数，`--describe-style ID --json` 输出单种配方。背景、字幕与主体分别绘制，支持混合与自定义。3D、玻璃、液态提供 Canvas 视觉适配；真实网格光照、折射、流体求解需要额外实现。当前全部为横屏。
+
+```bash
+python engine/render.py examples/style_gallery --serve
+python engine/render.py examples/style_gallery --sheet 2 6 10 14 18 22 26 30 34 38 42 46 50 54 58
+python engine/render.py examples/style_gallery --det
+```
+
+画廊是原创几何练习，不是新片的固定模板。仍可使用两种兼容起始外观；`--world` 与 `--style` 互斥，不指定时默认 C：
 
 | 选项 | 外观 | 常见用途 |
 | --- | --- | --- |
@@ -105,6 +129,8 @@ python engine/audio.py projects/probability --wav-only
 | 命令 | 用途 |
 | --- | --- |
 | `python scripts/check_env.py --json` | 机器可读环境诊断 |
+| `python scripts/new_film.py --list-styles --json` | 15 种风格的机器可读参数与创作配方 |
+| `python scripts/new_film.py --describe-style pixel` | 单种风格的特征、用途与实现范围 |
 | `python engine/get_fonts.py --check` | 检查字体与 OFL 文件 |
 | `python engine/render.py PROJECT --sheet 16` | 均匀取帧检查整体构图 |
 | `python engine/render.py PROJECT --sheet 2 8 15` | 检查指定时刻 |
@@ -123,11 +149,11 @@ concept-reel/
 ├── SKILL.md                 # Agent 创作入口
 ├── README.md                # 安装与使用
 ├── NOTICE.md / LICENSE      # 来源、资源与许可
-├── engine/                  # Canvas、渲染、音频和字体管理
+├── engine/                  # Canvas、15 种风格配置与组件、渲染、音频和字体管理
 ├── scripts/                 # 创建工程、环境诊断、集成检查
 ├── docs/production-guide.md # 内容驱动制作与验收
 ├── references/              # 分镜、视觉方法与引擎 API
-├── examples/                # 上游示例与本版本 smoke 示例
+├── examples/                # 上游示例、风格画廊与 smoke 示例
 ├── tests/                   # 参数、失败路径和文件处理测试
 └── projects/                # 你的工程；产物默认忽略
 ```

@@ -3,7 +3,8 @@
 
   python scripts/new_film.py <工程目录> --world C --title "片名" --duration 30
 
-B 寓言（心理和行为机制）· C 夜曲（抽象概念、看不见的机制）。
+--style 提供 15 种可调整的动态设计起点；--list-styles / --describe-style 查询配方。
+B 寓言与 C 夜曲保留兼容。
 生成 index.html、film.js 和内容驱动的 storyboard.md；已有分镜始终保留。
 film.js 只提供可运行的骨架，每一镜应根据分镜现写。
 """
@@ -16,6 +17,11 @@ import re
 import shlex
 import sys
 from pathlib import Path
+
+if __package__:
+    from .styles import get_style, load_styles
+else:
+    from styles import get_style, load_styles
 
 ROOT = Path(__file__).resolve().parent.parent
 WORLD = {
@@ -46,6 +52,37 @@ VK.film({{
   draw(fr, t) {{
     scene1(fr, t);
     K.subs(fr, t, SUBS, '{subs}');                // 字幕最后画，保持清晰
+  }},
+}});
+}})();
+"""
+
+STYLE_SKELETON = """/* Concept Reel · {name}
+ * 这是骨架，尚未绘制主体。根据 storyboard.md 写自己的场景。
+ * 风格配方见 references/styles.md；STYLE 可按内容调整。
+ * VStyles.demo 仅用于风格实验，不能替代本片分镜。 */
+(function () {{
+'use strict';
+const {{ W, H, clamp, lerp, seg, smooth, ss, E, fade, hash, rng, rgba, mix }} = VK;
+const K = VKit, S = VStyles;
+const STYLE = {profile};
+const P = STYLE.palette;
+
+const T = {{ end: {duration} }};
+const SUBS = [
+  // {{ a: 0.8, b: 4.2, zh: '解释一句{{关键词}}。' }},
+];
+
+function scene1(fr, t) {{
+  // 主体、动作与构图由本片内容决定。不要在 draw 中累计模拟状态。
+}}
+
+VK.film({{
+  dur: T.end, fps: {fps}, theme: 'flat', meta: {{ title: {title}, style: {style_id} }},
+  draw(fr, t) {{
+    S.apply(fr, STYLE, t);
+    scene1(fr, t);
+    S.caption(fr, t, SUBS, STYLE);
   }},
 }});
 }})();
@@ -129,9 +166,12 @@ def markdown_title(value):
     return re.sub(r"([\\`*_{}\[\]<>#|])", r"\\\1", value)
 
 
-def create_project(project, *, world="C", title=None, duration=30, fps=30, force=False):
+def create_project(project, *, world=None, style=None, title=None, duration=30, fps=30, force=False):
     """Create only project files; refuse partial or unsafe overwrites."""
-    world = world.upper()
+    if world is not None and style is not None:
+        raise ValueError("--style 与 --world 不能同时指定")
+    profile = get_style(style) if style is not None else None
+    world = (world or "C").upper()
     if world not in WORLD:
         raise ValueError("--world 只能是 C 或 B")
     duration = positive_duration(str(duration))
@@ -157,10 +197,25 @@ def create_project(project, *, world="C", title=None, duration=30, fps=30, force
     index, title_count = re.subn(r"<title>.*?</title>", lambda _: f"<title>{html.escape(title)}</title>", index, count=1, flags=re.DOTALL)
     if title_count != 1:
         raise ValueError("引擎 index.html 缺少 title 标签")
-    film = SKELETON.format(name=name, theme=theme, subs=subs, pal=pal, standing=standing,
-                           duration=repr(duration), fps=fps, title=json.dumps(title, ensure_ascii=True),
-                           en=", en: '……'" if world == "C" else "")
+    if profile is None:
+        film = SKELETON.format(name=name, theme=theme, subs=subs, pal=pal, standing=standing,
+                              duration=repr(duration), fps=fps, title=json.dumps(title, ensure_ascii=True),
+                              en=", en: '……'" if world == "C" else "")
+    else:
+        name = f'{profile["name"]}（{profile["id"]}）'
+        film = STYLE_SKELETON.format(name=name, profile=json.dumps(profile, ensure_ascii=False, indent=2),
+                                    duration=repr(duration), fps=fps, title=json.dumps(title, ensure_ascii=True),
+                                    style_id=json.dumps(profile["id"]))
     storyboard = STORYBOARD.format(title=markdown_title(title), duration=f"{duration:g}", fps=fps, world=name)
+    if profile is not None:
+        p = profile["palette"]
+        visual = (f'- 主风格：{name}；选型理由与适用镜头：待填写。\n'
+                  f'- 保留特征：{"；".join(profile["signature"])}。\n'
+                  f'- 配色起点：背景 {p["bg"]}，主体 {p["ink"]}，强调 {p["accent"]}，辅助 {p["secondary"]}。\n'
+                  f'- 字体键：{profile["font"]}；动作参考：{profile["motion"]["duration"]} 秒 / {profile["motion"]["easing"]}。\n'
+                  f'- 实现范围：{profile["implementation"]}\n'
+                  '- 辅风格、变化策略与颜色含义：待填写。')
+        storyboard = storyboard.replace('- 字体角色、颜色含义、空间关系与运动速度：待填写。', visual)
     project.mkdir(parents=True, exist_ok=True)
     generated[0].write_text(index, encoding="utf-8", newline="\n")
     generated[1].write_text(film, encoding="utf-8", newline="\n")
@@ -171,20 +226,50 @@ def create_project(project, *, world="C", title=None, duration=30, fps=30, force
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="新建内容驱动的 Concept Reel 工程；已有分镜始终保留。")
-    parser.add_argument("project", type=Path, help="工程目录")
-    parser.add_argument("--world", type=str.upper, choices=sorted(WORLD), default="C", help="B 寓言 / C 夜曲，默认 C")
+    profiles = load_styles()
+    ids = [item["id"] for item in profiles]
+    parser.add_argument("project", type=Path, nargs="?", help="工程目录；查询风格时不需要")
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--world", type=str.upper, choices=sorted(WORLD), help="兼容 B 寓言 / C 夜曲；未选择风格时默认 C")
+    selection.add_argument("--style", type=str.lower, choices=ids, metavar="ID", help="15 种风格之一，用 --list-styles 查看 ID")
+    query = parser.add_mutually_exclusive_group()
+    query.add_argument("--list-styles", action="store_true", help="列出 15 种风格与适用内容，不创建工程")
+    query.add_argument("--describe-style", type=str.lower, choices=ids, metavar="ID", help="显示风格的特征、配方与实现范围")
+    parser.add_argument("--json", action="store_true", help="风格查询以 JSON 输出（只用于 --list-styles / --describe-style）")
     parser.add_argument("--title", help="片名，默认使用工程目录名")
-    parser.add_argument("--duration", type=positive_duration, default=30.0, metavar="SECONDS", help="时长（秒），默认 30")
-    parser.add_argument("--fps", type=positive_fps, default=30, help="帧率（正整数），默认 30")
+    parser.add_argument("--duration", type=positive_duration, metavar="SECONDS", help="时长（秒），默认 30")
+    parser.add_argument("--fps", type=positive_fps, help="帧率（正整数），默认 30")
     parser.add_argument("--force", action="store_true", help="覆盖 index.html 和 film.js；保留已有 storyboard.md")
     args = parser.parse_args(argv)
+    if args.list_styles or args.describe_style:
+        if any(value is not None for value in (args.project, args.style, args.world, args.title, args.duration, args.fps)) or args.force:
+            parser.error("风格查询不能与工程路径或创建选项混用")
+        data = get_style(args.describe_style) if args.describe_style else profiles
+        if args.json:
+            print(json.dumps(data, ensure_ascii=False, indent=2))
+        elif args.describe_style:
+            print(f'{data["id"]} · {data["name"]} / {data["en_name"]}')
+            for label, key in (("特征", "signature"), ("适合", "use_cases"), ("配方", "recipe"), ("避免", "avoid")):
+                print(f'{label}：' + '；'.join(data[key]))
+            print('实现：' + data["implementation"])
+        else:
+            for item in data:
+                print(f'{item["id"]:16} {item["name"]} · {" / ".join(item["use_cases"])}')
+        return 0
+    if args.project is None:
+        parser.error("创建工程需要 project；查询风格请用 --list-styles 或 --describe-style")
+    if args.json:
+        parser.error("--json 只用于风格查询")
     try:
-        project = create_project(args.project, world=args.world, title=args.title, duration=args.duration, fps=args.fps, force=args.force)
+        project = create_project(args.project, world=args.world, style=args.style, title=args.title,
+                                 duration=args.duration if args.duration is not None else 30.0,
+                                 fps=args.fps if args.fps is not None else 30, force=args.force)
     except (OSError, ValueError) as exc:
         print(f"错误：{exc}", file=sys.stderr)
         return 1
     render_command = shlex.join([sys.executable, str(ROOT / "engine/render.py"), str(project)])
-    print(f"建好了：{project}（{WORLD[args.world][0]}）\n"
+    selected_name = get_style(args.style)["name"] if args.style else WORLD[args.world or "C"][0]
+    print(f"建好了：{project}（{selected_name}）\n"
           f"  预览  {render_command} --serve\n"
           f"  拼图  {render_command} --sheet 16\n"
           f"  渲染  {render_command}\n"

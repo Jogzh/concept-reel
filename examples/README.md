@@ -1,6 +1,6 @@
 # 示例工程
 
-以下除 `smoke` 外均为已有的学习示例，用于研究 Canvas 实现与分镜关系。仓库包含源码与部分预览，完整视频需要本地渲染；来源与许可说明见 [NOTICE.md](../NOTICE.md)。
+以下除 `smoke`、`style_gallery` 外均为已有的学习示例，用于研究 Canvas 实现与分镜关系。仓库包含源码与部分预览，完整视频需要本地渲染；来源与许可说明见 [NOTICE.md](../NOTICE.md)。
 
 | 工程 | 外观与时长 | 可以学习的实现 |
 | --- | --- | --- |
@@ -12,6 +12,7 @@
 | `bystander` | 寓言，100 秒 | 传说与研究证据的区分；人数与责任指标 |
 | `kit_gallery` | 引擎组件展示 | 字幕、片名卡、年份栏、仪表和图形组件 |
 | `smoke` | 本版本新增，2 秒 | 无科学断言的最小 Canvas/事件工程，用于测试管线 |
+| `style_gallery` | 本版本新增，60 秒 | 15 种风格的原创几何练习，每种 4 秒；配色、形态、动作与清晰字幕 |
 
 `learn_addiction` 在上游注明参考抖音【Ember余烬】同主题视频；其他样例的事实与主题来源保留在各自 `storyboard.md`/源码中。发布新作品前应核查论文、数字和适用条件，题材或文案改编的使用权需要单独判断。
 
@@ -21,6 +22,8 @@
 python engine/render.py examples/fold_C --serve
 python engine/render.py examples/fold_C --sheet 16
 python engine/render.py examples/kit_gallery --det
+python engine/render.py examples/style_gallery --serve
+python engine/render.py examples/style_gallery --sheet 2 6 10 14 18 22 26 30 34 38 42 46 50 54 58
 ```
 
 运行示例前下载字体。工程中的 HTML 通过 render.py 的本地服务器访问 `/engine/`，不直接双击运行。学习色彩、几何、裁切与时间函数，新主题围绕自己的分镜设计画面。
