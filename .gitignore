@@ -1,0 +1,55 @@
+# ============ Python ============
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# ============ Node ============
+node_modules/
+*.log
+
+# ============ 渲染产物（不进入版本控制：mp4 重新跑一遍就有） ============
+projects/*/renders/
+projects/*/audio/
+projects/*/review/
+projects/*/make_voiceover.py
+projects/*/make_bgm.py
+
+# examples 里的渲染产物（按需保留代表性截图，不要全留）
+examples/**/review/
+examples/**/renders/
+examples/**/audio/
+examples/**/*.mp4
+examples/**/*.wav
+examples/**/*.tmp
+examples/**/gen_blob.py
+
+# ============ 系统 / 编辑器 ============
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ============ 临时 / 缓存 ============
+tmp/
+*.tmp
+*.bak
+*.local
+
+# Downloaded CJK fonts (recreated by engine/get_fonts.py)
+engine/fonts/NotoSerifSC-VF.ttf
+engine/fonts/NotoSansSC-VF.ttf
+
+# Generated outputs at any project nesting depth
+**/renders/
+**/audio/
+**/review/
+
+# Private local configuration and archives
+.env.*
+*.bundle
+*.zip
