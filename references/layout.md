@@ -62,7 +62,7 @@ fr.g({ a: dim }, () => { /* 当前镜头 */ });
 
 大幅放大后仍要控制线宽和字号。可以把模型坐标投影到屏幕坐标，再画标签，避免文字随模型一起变得过大。
 
-上游示例 [fold_C](../examples/fold_C/film.js) 展示了空间推进与坐标换算；它继承自 [vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)，来源见 [NOTICE.md](../NOTICE.md)。
+示例 [fold_C](../examples/fold_C/film.js) 展示了空间推进与坐标换算；来源与许可说明见 [NOTICE.md](../NOTICE.md)。
 
 ## 七、给关键步骤足够时间
 

@@ -99,4 +99,4 @@
 
 交付时说明工程目录、运行命令、输出文件、完成的验证和模型简化。引用他人的代码、数据或素材时记录来源与许可；不要用别人的字幕或镜头逐段替换成新标题。
 
-本仓库的实现示例继承自 [vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)，详情见 [NOTICE.md](../NOTICE.md)。通用分析方法见 [analysis.md](analysis.md)，分镜和视觉解释方法见 [visualization.md](visualization.md)。
+本仓库实现示例的来源与许可说明见 [NOTICE.md](../NOTICE.md)。通用分析方法见 [analysis.md](analysis.md)，分镜和视觉解释方法见 [visualization.md](visualization.md)。

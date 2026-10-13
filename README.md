@@ -1,6 +1,6 @@
-# Concept Reel · 概念短片
+# Concept Reel · Vibe知识大赏短片工具
 
-把一个知识主题变成可预览、可修改、可重复渲染的字幕动画短片。由 [Jogzh](https://github.com/Jogzh) 维护，基于开源项目演进；来源与许可见 [NOTICE.md](NOTICE.md)。
+面向「Vibe知识大赏」（vibe知识大赏）的知识短片创作，把一个主题变成可预览、可修改、可重复渲染的字幕动画。由 [Jogzh](https://github.com/Jogzh) 维护，来源与许可见 [NOTICE.md](NOTICE.md)。
 
 Concept Reel 使用 JavaScript Canvas 描绘画面，Playwright 按时间捕获每一帧，FFmpeg 编码视频，Python 合成事件音效。适用于无旁白的知识解释、机制演示和图文叙事，当前画幅为 **1920×1080 横屏**。
 
@@ -53,7 +53,7 @@ python engine/render.py examples/fold_C --clip 0 3 preview
 
 让支持本地 skill 的 Agent 读取本仓库的 `SKILL.md`，例如：
 
-> 使用 concept-reel，解释“为什么同样的概率会带来不同的直觉”。制作 60 秒横屏字幕短片，先整理事实和分镜，再做一个关键镜头供预览，最后导出 MP4。
+> 使用 concept-reel 做一条 Vibe知识大赏视频，解释“为什么同样的概率会带来不同的直觉”。制作 60 秒横屏字幕短片，先整理事实和分镜，再做一个关键镜头供预览，最后导出 MP4。
 
 skill 包含选题、事实表、分镜、代码、视觉检查和音频流程。仅需预览时可以停在预览与源码交付；请求成片时才导出完整视频。
 
@@ -134,7 +134,7 @@ concept-reel/
 
 ## 来源与许可
 
-本项目基于 [zhaosenlin12-creator/vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)，上游 README 同时致谢 [Dave-cc](https://github.com/Dave-cc)。保留上游 MIT 许可与来源，不声称所有原有代码均为本项目原创。
+感谢原 skill 作者 [Dave-cc](https://github.com/Dave-cc)。项目保留 MIT 许可，资源与材料说明见 [NOTICE.md](NOTICE.md)。
 
 制作规范参考 Jogzh 的 `ai-video` 本地项目（`docs/video-style-guide.md` 和环境检查思路），在本仓库改写为 Canvas 工作流；不依赖该目录，也不引入其私人素材。技术依赖为 [Playwright](https://playwright.dev/python/)、[FFmpeg](https://ffmpeg.org/)、[NumPy](https://numpy.org/)、[SciPy](https://scipy.org/)、[Pillow](https://python-pillow.github.io/)；字体来自 [Google Fonts](https://github.com/google/fonts)。
 

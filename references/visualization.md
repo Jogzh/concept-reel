@@ -95,7 +95,7 @@
 
 实现时可以预先生成固定事件表，再按时间查询状态。卡片编号保持不变，任意 `seek(t)` 都应得到同样的位置和计数。
 
-需要学习现有代码组织时，可读 [fold_C 分镜](../examples/fold_C/storyboard.md) 的空间推进和 [pigeon_B 分镜](../examples/pigeon_B/storyboard.md) 的计时安排。它们是继承自 [vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill) 的上游示例，来源见 [NOTICE.md](../NOTICE.md)。
+需要学习现有代码组织时，可读 [fold_C 分镜](../examples/fold_C/storyboard.md) 的空间推进和 [pigeon_B 分镜](../examples/pigeon_B/storyboard.md) 的计时安排。来源与许可说明见 [NOTICE.md](../NOTICE.md)。
 
 ## 八、看图改图
 

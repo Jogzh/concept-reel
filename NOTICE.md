@@ -4,8 +4,7 @@ Concept Reel 由 Jogzh 维护。新仓库使用独立的提交历史，保留上
 
 ## 上游
 
-- 直接来源：[zhaosenlin12-creator/vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)。开始本版本时的快照：`74cd272`。
-- 上游 README 致谢：[Dave-cc](https://github.com/Dave-cc)，名称为 `vibe-knowledge-film`；此处沿用上游声明，不据此推断额外的源代码仓库地址。
+- 原 skill 作者署名：[Dave-cc](https://github.com/Dave-cc)，名称为 `vibe-knowledge-film`。
 - 本版本继承 Canvas API、组合件、Python 渲染/音频工具、部分方法文档及学习示例；修改代码、命名、使用说明、验证工具与制作约定。原有 API `VK`/`VKit` 保留以兼容示例。
 
 原 MIT 许可与其附带材料排除声明保留在 [LICENSE](LICENSE)。新增修改的署名仅覆盖本版本的修改，不替代上游权利。

@@ -81,6 +81,6 @@ OCR 可以帮助定位字幕，但存在漏字、标点和顺序错误。人物�
 
 ## 七、本仓库可以怎样参考
 
-[fold_C](../examples/fold_C/storyboard.md) 可以用于研究空间推进与分镜组织，[pigeon_B](../examples/pigeon_B/storyboard.md) 可以用于研究角色、计时与事件表。它们继承自 [vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)，属于本项目的上游示例；来源与许可见 [NOTICE.md](../NOTICE.md)。
+[fold_C](../examples/fold_C/storyboard.md) 可以用于研究空间推进与分镜组织，[pigeon_B](../examples/pigeon_B/storyboard.md) 可以用于研究角色、计时与事件表。来源与许可说明见 [NOTICE.md](../NOTICE.md)。
 
 这些示例可以帮助学习实现方法。新的短片仍应从自己的问题、事实表和分镜出发。讲解设计见 [visualization.md](visualization.md)，创作任务模板见 [prompts.md](prompts.md)。

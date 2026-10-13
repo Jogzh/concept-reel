@@ -1,6 +1,6 @@
 # 示例工程
 
-以下除 `smoke` 外均继承自 [vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)，保留用于学习 Canvas 实现与分镜关系，不作为 Jogzh 的原创视频署名。原仓库包含源码与部分预览，完整视频需要本地渲染。
+以下除 `smoke` 外均为已有的学习示例，用于研究 Canvas 实现与分镜关系。仓库包含源码与部分预览，完整视频需要本地渲染；来源与许可说明见 [NOTICE.md](../NOTICE.md)。
 
 | 工程 | 外观与时长 | 可以学习的实现 |
 | --- | --- | --- |

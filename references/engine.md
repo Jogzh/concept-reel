@@ -2,7 +2,7 @@
 
 Concept Reel 在一张 1920×1080 Canvas 上绘制画面，用 `seek(t)` 指定时间。每一帧应由时间、固定数据和模型参数确定，以支持静帧、片段和并行渲染。
 
-实现继承并改进自 [vibe-know--skill](https://github.com/zhaosenlin12-creator/vibe-know--skill)，来源与许可见 [NOTICE.md](../NOTICE.md)。JavaScript 的 `VK`、`VKit` 名称为兼容已有工程保留。
+实现的来源与许可说明见 [NOTICE.md](../NOTICE.md)。JavaScript 的 `VK`、`VKit` 名称为兼容已有工程保留。
 
 ```text
 engine/
